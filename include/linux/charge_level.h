@@ -10,6 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
+ * (values modified by psndna88@xda for NOTE II)
  */
 
 extern int ac_level;
@@ -19,26 +20,29 @@ extern int wireless_level;
 extern int ignore_unstable_power;
 extern int ignore_safety_margin;
 
-#ifdef CONFIG_MACH_T0
-#define AC_CHARGE_LEVEL_DEFAULT 1700
-#else
-#define AC_CHARGE_LEVEL_DEFAULT 1100
-#endif
-#define AC_CHARGE_LEVEL_MIN 0
+/* Modified Values for I930x and Note II compatibility  psndna88@xda */
 
-#ifdef CONFIG_MACH_T0
-#define AC_CHARGE_LEVEL_MAX 2000
+#if defined CONFIG_MACH_M0 || defined CONFIG_MACH_M3
+#define AC_CHARGE_LEVEL_DEFAULT 1000 	/* MACH_M0 & MACH_M3 */
+#define AC_CHARGE_LEVEL_MAX 1500	/* MACH_M0 & MACH_M3 */
 #else
-#define AC_CHARGE_LEVEL_MAX 1500
+#define AC_CHARGE_LEVEL_DEFAULT 1800 	/* MACH_T0 */
+#define AC_CHARGE_LEVEL_MAX 2000 	/* MACH_T0 */
 #endif
+#define AC_CHARGE_LEVEL_MIN 100
 
-#define USB_CHARGE_LEVEL_DEFAULT 500
+#define USB_CHARGE_LEVEL_DEFAULT 475
 #define USB_CHARGE_LEVEL_MIN 0
 #define USB_CHARGE_LEVEL_MAX 1000
 
-#define WIRELESS_CHARGE_LEVEL_DEFAULT 500
-#define WIRELESS_CHARGE_LEVEL_MIN 0
-#define WIRELESS_CHARGE_LEVEL_MAX 1000
+#if defined CONFIG_MACH_M0 || defined CONFIG_MACH_M3
+#define WIRELESS_CHARGE_LEVEL_DEFAULT 475	 /* MACH_M0 & MACH_M3 */
+#define WIRELESS_CHARGE_LEVEL_MAX 1000		 /* MACH_M0 & MACH_M3 */
+#else
+#define WIRELESS_CHARGE_LEVEL_DEFAULT 475 	/* MACH_T0 */
+#define WIRELESS_CHARGE_LEVEL_MAX 1900 		/* MACH_T0 */
+#endif
+#define WIRELESS_CHARGE_LEVEL_MIN 100
 
 #define IGNORE_UNSTABLE_POWER_DEFAULT 0
 #define IGNORE_SAFETY_MARGIN_DEFAULT 0

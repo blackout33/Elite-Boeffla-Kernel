@@ -12,7 +12,7 @@
 
 BOEFFLA_VERSION="Android7.x-smdk4x12"
 
-TOOLCHAIN="/home/$(whoami)/toolchain/bin/arm-eabi-"
+TOOLCHAIN="/home/john/Boeffla_DM3/toolchain/arm-eabi-6.x/bin/arm-eabi-"
 ARCHITECTURE=arm
 COMPILER_FLAGS_KERNEL="-mtune=cortex-a9 -fno-diagnostics-show-caret"
 COMPILER_FLAGS_MODULE="-mtune=cortex-a9 -fno-diagnostics-show-caret"
@@ -27,7 +27,7 @@ OUTPUT_FOLDER=""
 DEFCONFIG="boeffla_defconfig"
 DEFCONFIG_VARIANT=""
 
-KERNEL_NAME="Hybrid-Boeffla-Kernel"
+KERNEL_NAME="DM3-Boeffla-Kernel"
 
 FINISH_MAIL_TO=""
 
@@ -39,7 +39,7 @@ SMB_SHARE_BACKUP=""
 SMB_FOLDER_BACKUP=""
 SMB_AUTH_BACKUP=""
 
-NUM_CPUS="8"   # number of cpu cores used for build (leave empty for auto detection)
+NUM_CPUS=""   # number of cpu cores used for build (leave empty for auto detection)
 
 #######################################
 # automatic parameters, do not touch !

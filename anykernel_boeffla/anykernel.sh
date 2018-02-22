@@ -8,12 +8,12 @@
 
 # EDIFY properties
 do.devicecheck=1
-do.initd=1
+do.initd=0
 do.modules=1
 do.cleanup=1
-device.name1=m0
-device.name2=i9300
-device.name3=GT-I9300
+device.name1=t0lte
+device.name2=
+device.name3=
 device.name4=
 device.name5=
 device.name6=
@@ -28,7 +28,7 @@ device.name14=
 device.name15=
 
 # shell variables
-block=/dev/block/mmcblk0p5;
+block=/dev/block/mmcblk0p8;
 add_seandroidenforce=0
 supersu_exclusions=""
 is_slot_device=0;
@@ -47,7 +47,7 @@ dump_boot;
 # AnyKernel permissions
 chmod 775 $ramdisk/sbin
 chmod 755 $ramdisk/sbin/busybox
-chmod 755 $ramdisk/sbin/uci
+chmod 775 $ramdisk/sbin/uci
 
 chmod 775 $ramdisk/res
 chmod -R 755 $ramdisk/res/bc

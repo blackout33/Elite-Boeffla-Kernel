@@ -10,7 +10,7 @@
 # Parameters to be configured manually
 #######################################
 
-BOEFFLA_VERSION="Android7.x-smdk4x12"
+BOEFFLA_VERSION="Alpha-1-Boeffla-Kernel"
 
 TOOLCHAIN="/home/john/Boeffla_DM3/toolchain/arm-eabi-6.x/bin/arm-eabi-"
 ARCHITECTURE=arm
@@ -24,7 +24,7 @@ DTBTOOL_CMD=""
 MODULES_IN_SYSTEM="y"
 OUTPUT_FOLDER=""
 
-DEFCONFIG="boeffla_defconfig"
+DEFCONFIG="n7105_defconfig"
 DEFCONFIG_VARIANT=""
 
 KERNEL_NAME="DM3-Boeffla-Kernel"
@@ -99,6 +99,9 @@ step0_copy_code()
 	# (usage of * prevents .git folder to be copied)
 	cp -r $SOURCE_PATH/* $BUILD_PATH
 
+  	# Replace version information in mkcompile_h with the one from x-settings.sh
+  	sed "s/\`echo \$LINUX_COMPILE_BY | \$UTS_TRUNCATE\`/$KERNEL_NAME-$BOEFFLA_VERSION-$BOEFFLA_DATE/g" -i $BUILD_PATH/scripts/mkcompile_h
+	sed "s/\`echo \$LINUX_COMPILE_HOST | \$UTS_TRUNCATE\`/kozmo21/g" -i $BUILD_PATH/scripts/mkcompile_h
 }
 
 step1_make_clean()

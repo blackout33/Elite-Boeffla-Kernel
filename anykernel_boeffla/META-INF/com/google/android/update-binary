@@ -73,7 +73,7 @@ fi;
 chmod -R 755 /tmp/anykernel/tools /tmp/anykernel/bin;
 bb=/tmp/anykernel/tools/busybox;
 
-ui_print "Flashing Elite-Boeffla-Kernel for N7105";
+ui_print "Flashing Boeffla-Kernel for t0lte";
 ui_print " ";
 ui_print "(c) Lord Boeffla (aka andip71)";
 ui_print " ";
@@ -173,5 +173,6 @@ rm /system/addon.d/97-boeffla-kernel.sh;
 
 umount /system;
 umount /data;
-ui_print "* Finished, please reboot.";
+ui_print "* Finished.";
+ui_print "* WHAT ARE YOU WAITING FOR???? REBOOT ALREADY!!!!!";
 ui_print " ";

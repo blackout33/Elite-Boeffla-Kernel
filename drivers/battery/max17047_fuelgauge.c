@@ -872,7 +872,7 @@ static int __devinit max17047_fuelgauge_i2c_probe(struct i2c_client *client,
 	else
 		fg_data->fuelgauge.name = "max17047-fuelgauge";
 
-	fg_data->fuelgauge.type = POWER_SUPPLY_TYPE_BATTERY;
+	fg_data->fuelgauge.type = POWER_SUPPLY_TYPE_UNKNOWN;
 	fg_data->fuelgauge.properties = max17047_fuelgauge_props;
 	fg_data->fuelgauge.num_properties =
 				ARRAY_SIZE(max17047_fuelgauge_props);

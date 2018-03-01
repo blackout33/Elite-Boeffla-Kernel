@@ -22,6 +22,7 @@
 #include <linux/mutex.h>
 #include <linux/pm.h>
 #include <linux/pm_runtime.h>
+#include <linux/pm_qos.h>
 #include <linux/resume-trace.h>
 #include <linux/interrupt.h>
 #include <linux/sched.h>
@@ -104,6 +105,7 @@ void device_pm_add(struct device *dev)
 			dev_name(dev->parent));
 	list_add_tail(&dev->power.entry, &dpm_list);
 	mutex_unlock(&dpm_list_mtx);
+	dev_pm_qos_constraints_init(dev);
 }
 
 /**
@@ -114,6 +116,7 @@ void device_pm_remove(struct device *dev)
 {
 	pr_debug("PM: Removing info for %s:%s\n",
 		 dev->bus ? dev->bus->name : "No Bus", dev_name(dev));
+	dev_pm_qos_constraints_destroy(dev);
 	complete_all(&dev->power.completion);
 	mutex_lock(&dpm_list_mtx);
 	list_del_init(&dev->power.entry);
@@ -442,9 +445,9 @@ static int device_resume_noirq(struct device *dev, pm_message_t state)
 	TRACE_DEVICE(dev);
 	TRACE_RESUME(0);
 
-	if (dev->pwr_domain) {
+	if (dev->pm_domain) {
 		pm_dev_dbg(dev, state, "EARLY power domain ");
-		error = pm_noirq_op(dev, &dev->pwr_domain->ops, state);
+		error = pm_noirq_op(dev, &dev->pm_domain->ops, state);
 	} else if (dev->type && dev->type->pm) {
 		pm_dev_dbg(dev, state, "EARLY type ");
 		error = pm_noirq_op(dev, dev->type->pm, state);
@@ -552,9 +555,9 @@ static int device_resume(struct device *dev, pm_message_t state, bool async)
 	if (!dev->power.is_suspended)
 		goto Unlock;
 
-	if (dev->pwr_domain) {
+	if (dev->pm_domain) {
 		pm_dev_dbg(dev, state, "power domain ");
-		error = pm_op(dev, &dev->pwr_domain->ops, state);
+		error = pm_op(dev, &dev->pm_domain->ops, state);
 		goto End;
 	}
 
@@ -700,10 +703,10 @@ static void device_complete(struct device *dev, pm_message_t state)
 {
 	device_lock(dev);
 
-	if (dev->pwr_domain) {
+	if (dev->pm_domain) {
 		pm_dev_dbg(dev, state, "completing power domain ");
-		if (dev->pwr_domain->ops.complete)
-			dev->pwr_domain->ops.complete(dev);
+		if (dev->pm_domain->ops.complete)
+			dev->pm_domain->ops.complete(dev);
 	} else if (dev->type && dev->type->pm) {
 		pm_dev_dbg(dev, state, "completing type ");
 		if (dev->type->pm->complete)
@@ -813,9 +816,9 @@ static int device_suspend_noirq(struct device *dev, pm_message_t state)
 	timer.data = (unsigned long)&data;
 	add_timer(&timer);
 
-	if (dev->pwr_domain) {
+	if (dev->pm_domain) {
 		pm_dev_dbg(dev, state, "LATE power domain ");
-		error = pm_noirq_op(dev, &dev->pwr_domain->ops, state);
+		error = pm_noirq_op(dev, &dev->pm_domain->ops, state);
 		if (error)
 			goto exit;
 	} else if (dev->type && dev->type->pm) {
@@ -939,9 +942,9 @@ static int __device_suspend(struct device *dev, pm_message_t state, bool async)
 	}
 #endif
 
-	if (dev->pwr_domain) {
+	if (dev->pm_domain) {
 		pm_dev_dbg(dev, state, "power domain ");
-		error = pm_op(dev, &dev->pwr_domain->ops, state);
+		error = pm_op(dev, &dev->pm_domain->ops, state);
 		goto End;
 	}
 
@@ -1085,11 +1088,11 @@ static int device_prepare(struct device *dev, pm_message_t state)
 
 	device_lock(dev);
 
-	if (dev->pwr_domain) {
+	if (dev->pm_domain) {
 		pm_dev_dbg(dev, state, "preparing power domain ");
-		if (dev->pwr_domain->ops.prepare)
-			error = dev->pwr_domain->ops.prepare(dev);
-		suspend_report_result(dev->pwr_domain->ops.prepare, error);
+		if (dev->pm_domain->ops.prepare)
+			error = dev->pm_domain->ops.prepare(dev);
+		suspend_report_result(dev->pm_domain->ops.prepare, error);
 		if (error)
 			goto End;
 	} else if (dev->type && dev->type->pm) {
